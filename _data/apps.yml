@@ -1,0 +1,15 @@
+webimage:
+  name: Easy Web Image Collector
+  icon: /assets/img/webimage-180.png
+  subtitle_ko: 탭 한 번으로 웹 이미지 저장
+  subtitle_en: Tap a picture, save to iPhone
+nasphoto:
+  name: Easy NAS Photo Viewer
+  icon: /assets/img/nasphoto-180.png
+  subtitle_ko: 아이폰과 NAS 의 사진·동영상을 보고 주고받기
+  subtitle_en: View & move media, both ways
+torrent:
+  name: Easy NAS Download Manager
+  icon: /assets/img/torrent-180.png
+  subtitle_ko: Synology Download Station 원격제어
+  subtitle_en: Remote for Download Station
