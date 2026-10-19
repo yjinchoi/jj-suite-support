@@ -23,7 +23,7 @@ description: "Easy NAS Download Manager 사용 도움말과 문의 방법입니�
 | 앱 | 하는 일 | Synology NAS 필요 |
 |---|---|---|
 | **Easy Web Image Collector** (홈화면 `WebImage`) | 웹 브라우저에서 원하는 이미지를 탭해 아이폰에 내려받습니다 | **아니오** — 설치 후 설정 없이 바로 씁니다 |
-| **Easy NAS Photo Viewer** (홈화면 `NASPhoto`) | 아이폰과 Synology NAS(또는 SMB 공유 폴더)의 사진·동영상을 보고, 둘 사이에서 파일을 주고받습니다 | 예 (SMB 공유 폴더로도 됩니다) |
+| **Easy NAS Photo Viewer** (홈화면 `NASPhoto`) | 아이폰과 Synology NAS(또는 SMB 공유 폴더 · SFTP 서버)의 사진·동영상을 보고, 둘 사이에서 파일을 주고받습니다 | 예 (SMB 공유 폴더 · SFTP 서버로도 됩니다) |
 | **Easy NAS Download Manager** (홈화면 `Downloads`) | 본인이 소유한 Synology NAS 의 Download Station 을 원격으로 관리합니다 | **예 (필수)** |
 
 세 앱은 **자격 증명과 설정을 공유하지 않습니다.** 각각 따로 설정합니다(→ 아래 FAQ).
@@ -33,9 +33,9 @@ description: "Easy NAS Download Manager 사용 도움말과 문의 방법입니�
 
 ## 요구 사항
 
-- **iOS 16.0 이상**
+- **iOS 16.0 이상** (Easy NAS Photo Viewer 는 **iOS 17.0 이상**)
 - iPhone · iPad 공용
-- **본인 소유의 Synology NAS** (DSM 7.x 권장) — Easy NAS Photo Viewer 는 SMB 공유 폴더도 됩니다
+- **본인 소유의 Synology NAS** (DSM 7.x 권장) — NAS 사진은 SMB 공유 폴더 · SFTP 서버도 됩니다
 
 ---
 

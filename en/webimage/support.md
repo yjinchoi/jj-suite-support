@@ -17,7 +17,7 @@ description: "Help for Easy Web Image Collector and how to contact the developer
 
 ## Requirements
 
-- **iOS 16.0 or later**
+- **iOS 16.0 or later** (Easy NAS Photo Viewer: **iOS 17.0 or later**)
 - iPhone and iPad
 
 ---

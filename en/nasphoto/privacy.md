@@ -241,13 +241,16 @@ own access group `$(AppIdentifierPrefix)com.jjnasphoto.app`. They are not shared
 
 Two things are stored for this app alone:
 
-1. **Server profiles** (`nas.profiles.v2`) — for each registered server. Synology NAS and SMB
+1. **Server profiles** (`nas.profiles.v2`) — for each registered server. Synology NAS, SMB and SFTP
    servers use the same store.
-   - All servers: server type, address, port, account name, **password**, folder settings
+   - All servers: server type, address, port, account name, **password** (SFTP may use a private key instead), folder settings
      (default folder, recent folders), and a profile identifier (UUID).
    - Synology NAS: whether a QuickConnect ID and HTTPS are used, the two-factor (TOTP) seed, and the
      trusted-device token issued by DSM with its expiry.
    - SMB servers: share name and domain.
+   - SFTP servers: start path, authentication method (password / private key), the **OpenSSH private key**
+     you imported (Ed25519 or RSA) and its **passphrase**, and the **server host-key fingerprint**
+     (`SHA256:…`) you trusted on first connection.
 2. **NAS certificate trust fingerprints** (`certtrust.nas.v1`) — the fingerprint of a self-signed
    certificate the user explicitly approved in an alert, checked against on later connections.
 
@@ -272,8 +275,9 @@ The KVS container identifier is `$(TeamIdentifierPrefix)com.jjnasphoto.app`, pri
 
 ### Who this app talks to (common §6)
 
-**The servers whose addresses the user typed into server settings**, of two kinds: a **Synology NAS**
-and an **SMB file server** (a shared folder on Windows, macOS, or a NAS). On top of that come the ads
+**The servers whose addresses the user typed into server settings**, of three kinds: a **Synology NAS**,
+an **SMB file server** (a shared folder on Windows, macOS, or a NAS), and an **SFTP server** (a file server
+reached over SSH). On top of that come the ads
 (Google) and the ad-free purchase (Apple App Store) common to all three apps (common §6.1, §6.2).
 
 - The address is entered by the user — a LAN address, a public domain or IP, or (for Synology) a
@@ -286,11 +290,14 @@ and an **SMB file server** (a shared folder on Windows, macOS, or a NAS). On top
 - **Uploads go only to a Synology NAS.** When you upload files from an iPhone folder, or items picked
   from your photo library, the app writes the request body to a temporary file on the device and hands
   it to iOS **background transfer**, so iOS keeps sending it **to the same NAS** even if you lock the
-  screen or switch apps. The temporary files are deleted when the transfer ends. SMB servers are used
-  only for browsing, downloading and playback.
+  screen or switch apps. The temporary files are deleted when the transfer ends. SMB and SFTP servers are
+  used only for browsing, downloading and playback.
+- **SFTP host-key pinning (trust on first use)**: the first time you connect to an SFTP server, the app
+  shows its host-key fingerprint and connects only if you trust it. The trusted fingerprint is saved in
+  the profile, and the connection is blocked if the server's key later changes.
 - Video playback from a Synology NAS uses plain HTTP (below). Videos on an SMB server are read by the
-  built-in VLC directly from that server over SMB; no address containing credentials is passed to
-  another app.
+  built-in VLC directly from that server over SMB; videos on an SFTP server are read by the app over
+  SFTP and fed to the built-in VLC. No address containing credentials is passed to another app.
 
 ### When unencrypted transfer is used, and why (common §7)
 
@@ -308,6 +315,9 @@ address the user typed in.**
    authentication only. **File contents exchanged over SMB are therefore not encrypted on the
    network.** It is meant for a trusted network such as a home or office LAN.
 
+**SFTP is not on this list** — it connects over SSH, so authentication and file contents are both
+**encrypted** in transit.
+
 In every case the destination is a single machine the user owns, and traffic crosses the
 internet only if the user has exposed that server themselves. No connection goes to the developer
 in any case. This premise is also stated in the Requirements section of the App Store description.
@@ -317,7 +327,7 @@ in any case. This premise is also stated in the Requirements section of the App 
 | Permission | Info.plist key | What it is actually for |
 |---|---|---|
 | Photos — **add only** | `NSPhotoLibraryAddUsageDescription` | Saving a photo you are viewing into the iPhone Photos app. **Read access to the photo library is never requested** — there is no read-permission key in the app |
-| Local Network | `NSLocalNetworkUsageDescription` | Reaching a NAS or SMB server on a private IP address (e.g. 192.168.x.x). iOS asks once, the first time a private address is contacted |
+| Local Network | `NSLocalNetworkUsageDescription` | Reaching a NAS, SMB or SFTP server on a private IP address (e.g. 192.168.x.x). iOS asks once, the first time a private address is contacted |
 | App Tracking Transparency | `NSUserTrackingUsageDescription` | Common to all three apps — asked once after ad consent. Allow it for personalized ads; otherwise ads are non-personalized (common §6.1). Change it in iOS Settings › Privacy & Security › Tracking |
 
 That is the complete list. The app does not request location, contacts, microphone, camera,
@@ -331,16 +341,21 @@ temporary folder on the device, uploaded to your NAS, and the temporary copies a
 
 ### Third-party libraries
 
-Two open-source libraries, plus the advertising SDK common to all three apps:
+Open-source libraries, plus the advertising SDK common to all three apps:
 
 - **MobileVLCKit 3.7.3** (VideoLAN, LGPL v2.1 or later) — decodes media in the "Built-in VLC"
   playback mode and reads videos from SMB servers.
 - **AMSMB2 4.0.3** (with libsmb2, LGPL v2.1 or later) — active only when connecting to an SMB server.
+- **The SFTP stack** — active only when connecting to an SFTP server: **Citadel 0.12.1** (MIT),
+  **swift-nio-ssh** (the fork Citadel uses), **swift-nio**, **swift-asn1**, **swift-log**, **swift-atomics**,
+  **swift-collections**, **swift-system** (Apache 2.0), **swift-crypto** (Apache 2.0, with BoringSSL —
+  OpenSSL / SSLeay / ISC), and **BigInt** (MIT).
 - **Google Mobile Ads SDK** (with the User Messaging Platform) — for showing ads only; see common **§6.1**.
 
-The two open-source libraries have no network-collection, analytics or advertising functionality.
-They are linked as dynamic frameworks, and their licences, copyrights and source repository links
-are shown in-app under **Settings → Open Source Licences**.
+None of the open-source libraries has network-collection, analytics or advertising functionality.
+The two LGPL libraries (MobileVLCKit, AMSMB2) are linked as dynamic frameworks. The licences,
+copyrights and source repository links of all of them are shown in-app under
+**Settings → Open Source Licences**.
 
 There are no analytics SDKs or crash-reporting libraries.
 

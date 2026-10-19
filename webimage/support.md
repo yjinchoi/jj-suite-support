@@ -17,7 +17,7 @@ description: "Easy Web Image Collector 사용 도움말과 문의 방법입니�
 
 ## 요구 사항
 
-- **iOS 16.0 이상**
+- **iOS 16.0 이상** (Easy NAS Photo Viewer 는 **iOS 17.0 이상**)
 - iPhone · iPad 공용
 
 ---

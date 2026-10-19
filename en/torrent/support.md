@@ -23,7 +23,7 @@ of them requires the others.
 | App | What it does | Synology NAS required |
 |---|---|---|
 | **Easy Web Image Collector** (Home Screen: `WebImage`) | Tap images in a web browser to download them to your iPhone | **No** — works right after install, no setup |
-| **Easy NAS Photo Viewer** (Home Screen: `NASPhoto`) | View photos and videos on your iPhone and on your Synology NAS (or an SMB shared folder), and move files between them | Yes (an SMB shared folder also works) |
+| **Easy NAS Photo Viewer** (Home Screen: `NASPhoto`) | View photos and videos on your iPhone and on your Synology NAS (or an SMB shared folder or SFTP server), and move files between them | Yes (an SMB shared folder or SFTP server also works) |
 | **Easy NAS Download Manager** (Home Screen: `Downloads`) | Remotely manage Download Station on the Synology NAS you own | **Yes (required)** |
 
 The three apps **do not share credentials or settings.** Each is configured separately (see FAQ).
@@ -33,9 +33,9 @@ The only thing they share on the same device is the ad-free purchase status.
 
 ## Requirements
 
-- **iOS 16.0 or later**
+- **iOS 16.0 or later** (Easy NAS Photo Viewer: **iOS 17.0 or later**)
 - iPhone and iPad
-- **A Synology NAS you own** (DSM 7.x recommended) — NAS Photo Viewer also works with an SMB shared folder
+- **A Synology NAS you own** (DSM 7.x recommended) — NAS Photo Viewer also works with an SMB shared folder or an SFTP server
 
 ---
 

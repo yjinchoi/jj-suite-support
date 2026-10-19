@@ -23,7 +23,7 @@ description: "Easy NAS Photo Viewer 사용 도움말과 문의 방법입니다."
 | 앱 | 하는 일 | Synology NAS 필요 |
 |---|---|---|
 | **Easy Web Image Collector** (홈화면 `WebImage`) | 웹 브라우저에서 원하는 이미지를 탭해 아이폰에 내려받습니다 | **아니오** — 설치 후 설정 없이 바로 씁니다 |
-| **Easy NAS Photo Viewer** (홈화면 `NASPhoto`) | 아이폰과 Synology NAS(또는 SMB 공유 폴더)의 사진·동영상을 보고, 둘 사이에서 파일을 주고받습니다 | 예 (SMB 공유 폴더로도 됩니다) |
+| **Easy NAS Photo Viewer** (홈화면 `NASPhoto`) | 아이폰과 Synology NAS(또는 SMB 공유 폴더 · SFTP 서버)의 사진·동영상을 보고, 둘 사이에서 파일을 주고받습니다 | 예 (SMB 공유 폴더 · SFTP 서버로도 됩니다) |
 | **Easy NAS Download Manager** (홈화면 `Downloads`) | 본인이 소유한 Synology NAS 의 Download Station 을 원격으로 관리합니다 | **예 (필수)** |
 
 세 앱은 **자격 증명과 설정을 공유하지 않습니다.** 각각 따로 설정합니다(→ 아래 FAQ).
@@ -33,9 +33,9 @@ description: "Easy NAS Photo Viewer 사용 도움말과 문의 방법입니다."
 
 ## 요구 사항
 
-- **iOS 16.0 이상**
+- **iOS 16.0 이상** (Easy NAS Photo Viewer 는 **iOS 17.0 이상**)
 - iPhone · iPad 공용
-- **본인 소유의 Synology NAS** (DSM 7.x 권장) — Easy NAS Photo Viewer 는 SMB 공유 폴더도 됩니다
+- **본인 소유의 Synology NAS** (DSM 7.x 권장) — NAS 사진은 SMB 공유 폴더 · SFTP 서버도 됩니다
 
 ---
 
@@ -199,8 +199,10 @@ iOS 의 사진 선택기가 열립니다. 여러 장 · 동영상을 고른 뒤 
 
 VideoLAN 의 **MobileVLCKit (LGPL v2.1 이상)** 을 동적 프레임워크로 포함하고 있습니다.
 라이선스 전문 · 저작권 · 소스 저장소 링크는 앱 안의 **설정 → 오픈소스 라이선스**에 있습니다.
-GPL 전용 플러그인은 포함하지 않았습니다. 오픈소스는 이것과 SMB 연결용 **AMSMB2(libsmb2, LGPL v2.1 이상)**
-둘이고, 그 밖의 서드파티는 광고 표시용 Google Mobile Ads SDK 하나입니다.
+GPL 전용 플러그인은 포함하지 않았습니다. 그 밖의 오픈소스는 SMB 연결용 **AMSMB2(libsmb2, LGPL v2.1 이상)** 와
+SFTP 연결용 **Citadel**(MIT) 및 그 의존성(swift-nio-ssh · swift-nio · swift-crypto/BoringSSL · swift-asn1 ·
+swift-log · swift-atomics · swift-collections · swift-system · BigInt)이고, 오픈소스가 아닌 서드파티는 광고 표시용
+Google Mobile Ads SDK 하나입니다. 전부 **설정 → 오픈소스 라이선스**에 있습니다.
 
 ### Q. 이 앱은 Synology 가 만든 앱인가요?
 

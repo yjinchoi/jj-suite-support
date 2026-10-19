@@ -23,7 +23,7 @@ of them requires the others.
 | App | What it does | Synology NAS required |
 |---|---|---|
 | **Easy Web Image Collector** (Home Screen: `WebImage`) | Tap images in a web browser to download them to your iPhone | **No** — works right after install, no setup |
-| **Easy NAS Photo Viewer** (Home Screen: `NASPhoto`) | View photos and videos on your iPhone and on your Synology NAS (or an SMB shared folder), and move files between them | Yes (an SMB shared folder also works) |
+| **Easy NAS Photo Viewer** (Home Screen: `NASPhoto`) | View photos and videos on your iPhone and on your Synology NAS (or an SMB shared folder or SFTP server), and move files between them | Yes (an SMB shared folder or SFTP server also works) |
 | **Easy NAS Download Manager** (Home Screen: `Downloads`) | Remotely manage Download Station on the Synology NAS you own | **Yes (required)** |
 
 The three apps **do not share credentials or settings.** Each is configured separately (see FAQ).
@@ -33,9 +33,9 @@ The only thing they share on the same device is the ad-free purchase status.
 
 ## Requirements
 
-- **iOS 16.0 or later**
+- **iOS 16.0 or later** (Easy NAS Photo Viewer: **iOS 17.0 or later**)
 - iPhone and iPad
-- **A Synology NAS you own** (DSM 7.x recommended) — NAS Photo Viewer also works with an SMB shared folder
+- **A Synology NAS you own** (DSM 7.x recommended) — NAS Photo Viewer also works with an SMB shared folder or an SFTP server
 
 ---
 
@@ -212,9 +212,11 @@ on a Mac are moved into the iPhone folders on the next launch.
 
 VideoLAN's **MobileVLCKit (LGPL v2.1 or later)** is embedded as a dynamic framework. The licence,
 the copyright and a link to the source repository are in **Settings → Open Source Licences** inside
-the app. No GPL-only plugins are bundled. The other open-source component is **AMSMB2 (with libsmb2,
-LGPL v2.1 or later)** for SMB connections; the only other third-party code is the Google Mobile Ads SDK,
-used to show ads.
+the app. No GPL-only plugins are bundled. The other open-source components are **AMSMB2 (with
+libsmb2, LGPL v2.1 or later)** for SMB connections and **Citadel** (MIT) with its dependencies
+(swift-nio-ssh, swift-nio, swift-crypto/BoringSSL, swift-asn1, swift-log, swift-atomics,
+swift-collections, swift-system, BigInt) for SFTP; the only non-open-source third-party code is the
+Google Mobile Ads SDK, used to show ads. All are listed under **Settings → Open Source Licences**.
 
 ### Q. Is this a Synology app?
 
