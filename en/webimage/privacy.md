@@ -12,7 +12,7 @@ description: "What information Easy Web Image Collector handles, where it is sto
 # Privacy Policy
 
 **Applies to**: Easy Web Image Collector (iOS)
-**Last updated**: 2026-10-19 **Version**: 1.1
+**Last updated**: 2026-10-21 **Version**: 1.2
 
 ---
 
@@ -132,13 +132,13 @@ developer no requests of any kind.
 
 ### 6.1 Ads — Google AdMob
 
-- **When ads appear**: once when the app starts fresh (an app-open ad — skipped for that launch if
-  it is not ready within 4 seconds), and once for every 30 minutes of accumulated on-screen use (an
-  interstitial — only at a moment when you are not interacting, such as after a screen change). No
-  ad is shown once you have bought ad removal, or while another window such as first-run guidance,
-  a sheet, or an alert is open.
-- **Tracking permission (ATT) and personalized ads**: after ad consent (below), while the app is on
-  screen, it shows iOS's tracking-permission prompt **once**.
+- **When ads appear**: only while you wait for something the app is doing — for example connecting
+  to a server, transferring files, or adding a task. A 300×250 banner labelled "Ad" appears inside the
+  progress window for at least 2 seconds. There is **no ad at launch and no ad on a timer**, and none in
+  the first 5 seconds after the app starts. No ad is shown once you have bought ad removal, before ad
+  consent is settled, or when no ad has been loaded — the progress window then simply shows progress.
+- **Tracking permission (ATT) and personalized ads**: on the **first launch**, after the ad-consent check
+  (below), while the app is on screen, it shows iOS's tracking-permission prompt **once** and never again.
   - If you **allow** it, the advertising identifier (IDFA) is provided to Google and you may see
     **personalized ads** based on your interests and your activity in other companies' apps and
     websites. Under Apple's definition this is **tracking**.
@@ -188,9 +188,9 @@ developer no requests of any kind.
   clear. Which cases those are, and why, is stated in the **per-app section**. In every case
   the destination is a website you opened yourself or a server you own and addressed yourself;
   no connection goes to the developer (§6).
-- The app qualifies for the standard-encryption exemption under Category 5 Part 2 of the U.S.
-  Export Administration Regulations and declares this in its app information
-  (`ITSAppUsesNonExemptEncryption = false`).
+- The app uses only standard encryption (such as TLS, and in some apps SSH and SMB 3) and answers
+  export-compliance questions in its App Store information as U.S. export rules and Apple require. How
+  each app answers is stated in the **per-app section**.
 - Credentials are held in the iOS Keychain as described in §3.1.
 - For hosts you explicitly choose to trust, the app stores that certificate's fingerprint and
   checks it on later connections. Certificate errors for hosts you have not approved are not
@@ -339,7 +339,7 @@ of the four; delete those individually on the bookmarks screen.
 **Settings → Diagnostics → Diagnostic log**: the *Clear* button empties the record.
 
 **Saved images**: delete files and folders on the app's **Downloads** screen. If Easy NAS Photo
-Viewer is installed, you can also delete them there under iPhone folders › Web Images (§H).
+Viewer is installed, you can also delete them there in its iPhone Folder (§H).
 
 **Ad consent**: Settings → Remove Ads → Ad Privacy Settings (shown only where consent is required).
 
@@ -350,11 +350,12 @@ in to the same Apple ID.
 
 ### H. Where saved images live — storage shared with the developer's other app
 
-Saved images are stored on the device in a **shared storage area** (`Files/Web/` inside the App
-Group `group.com.jjsuite.shared`). The developer's app **Easy NAS Photo Viewer** uses the same area.
+Saved images are stored on the device in a **shared storage area** (`Files/` inside the App
+Group `group.com.jjsuite.shared`). It is **one folder** shared with the developer's app **Easy NAS Photo Viewer**.
 
-- If that app is installed on the same device, it shows this folder as iPhone folders › Web Images
-  and can open and delete the files, and upload them to your own server when you choose to. The files
+- If that app is installed on the same device, it shows this folder as its iPhone Folder; files that
+  app downloads from a NAS or receives through the share sheet land in the same folder and appear on
+  the Downloads screen too. That app can open and delete the files, and upload them to your own server when you choose to. The files
   leave the device only when you upload them yourself from that app.
 - This area is **not visible under "On My iPhone" in the Files app.** Use the app's Downloads screen
   and its Share button to take files elsewhere.
@@ -362,6 +363,12 @@ Group `group.com.jjsuite.shared`). The developer's app **Easy NAS Photo Viewer**
   into this area the first time the updated app runs.
 - Deleting this app leaves these files in place while Easy NAS Photo Viewer remains installed; they
   are removed when every app using the area has been deleted.
+
+---
+
+### I. Shared policy §7 — encryption and export compliance
+
+This app uses only the HTTPS (TLS) provided by the operating system. It qualifies for the standard-encryption exemption under Category 5 Part 2 of the U.S. Export Administration Regulations and declares this in its app information (`ITSAppUsesNonExemptEncryption = false`).
 
 ---
 

@@ -12,7 +12,7 @@ description: "What information Easy NAS Photo Viewer handles, where it is stored
 # Privacy Policy
 
 **Applies to**: Easy NAS Photo Viewer (iOS)
-**Last updated**: 2026-10-19 **Version**: 1.1
+**Last updated**: 2026-10-21 **Version**: 1.2
 
 ---
 
@@ -132,13 +132,13 @@ developer no requests of any kind.
 
 ### 6.1 Ads — Google AdMob
 
-- **When ads appear**: once when the app starts fresh (an app-open ad — skipped for that launch if
-  it is not ready within 4 seconds), and once for every 30 minutes of accumulated on-screen use (an
-  interstitial — only at a moment when you are not interacting, such as after a screen change). No
-  ad is shown once you have bought ad removal, or while another window such as first-run guidance,
-  a sheet, or an alert is open.
-- **Tracking permission (ATT) and personalized ads**: after ad consent (below), while the app is on
-  screen, it shows iOS's tracking-permission prompt **once**.
+- **When ads appear**: only while you wait for something the app is doing — for example connecting
+  to a server, transferring files, or adding a task. A 300×250 banner labelled "Ad" appears inside the
+  progress window for at least 2 seconds. There is **no ad at launch and no ad on a timer**, and none in
+  the first 5 seconds after the app starts. No ad is shown once you have bought ad removal, before ad
+  consent is settled, or when no ad has been loaded — the progress window then simply shows progress.
+- **Tracking permission (ATT) and personalized ads**: on the **first launch**, after the ad-consent check
+  (below), while the app is on screen, it shows iOS's tracking-permission prompt **once** and never again.
   - If you **allow** it, the advertising identifier (IDFA) is provided to Google and you may see
     **personalized ads** based on your interests and your activity in other companies' apps and
     websites. Under Apple's definition this is **tracking**.
@@ -188,9 +188,9 @@ developer no requests of any kind.
   clear. Which cases those are, and why, is stated in the **per-app section**. In every case
   the destination is a website you opened yourself or a server you own and addressed yourself;
   no connection goes to the developer (§6).
-- The app qualifies for the standard-encryption exemption under Category 5 Part 2 of the U.S.
-  Export Administration Regulations and declares this in its app information
-  (`ITSAppUsesNonExemptEncryption = false`).
+- The app uses only standard encryption (such as TLS, and in some apps SSH and SMB 3) and answers
+  export-compliance questions in its App Store information as U.S. export rules and Apple require. How
+  each app answers is stated in the **per-app section**.
 - Credentials are held in the iOS Keychain as described in §3.1.
 - For hosts you explicitly choose to trust, the app stores that certificate's fingerprint and
   checks it on later connections. Certificate errors for hosts you have not approved are not
@@ -359,33 +359,32 @@ copyrights and source repository links of all of them are shown in-app under
 
 There are no analytics SDKs or crash-reporting libraries.
 
-### Shared storage — the "iPhone folders" shared with the Web Image app (common §3.3, §9)
+### Shared storage — the "iPhone Folder" shared with the Web Image app (common §3.3, §9)
 
-This app's "iPhone folders" are a **shared storage area** on the device (`Files/` inside the App
+This app's "iPhone Folder" is a **shared storage area** on the device (`Files/` inside the App
 Group `group.com.jjsuite.shared`), used together with the developer's **Easy Web Image Collector**.
 
-- Files downloaded from the NAS ("Downloads"), files received through another app's share sheet
-  ("Received"), and folders you create live here. Images saved by Easy Web Image Collector appear
-  in the "Web Images" folder.
-- Both apps can **read and delete** files in this area — Easy Web Image Collector works only with the
-  "Web Images" folder on screen. Files leave the device only when you upload them to your own NAS.
+- Files downloaded from the NAS, files received through another app's share sheet, images saved by
+  Easy Web Image Collector, and folders you create all sit together in **one folder**. Both apps see
+  the same folder.
+- Both apps can **read and delete** files in this area. Files leave the device only when you upload
+  them to your own NAS.
 - This area is **not visible under "On My iPhone" in the Files app.** Files you put into this app's
   folder through the Files app or Finder, and files an earlier version kept in the app's own folder
-  (`Documents/`), are moved into this area on the next launch (diagnostic logs excepted).
+  (`Documents/`) or in the former sub-folders (Received, Downloads, Web Images), are moved into this
+  folder on the next launch (diagnostic logs excepted).
 - Deleting this app leaves these files in place while Easy Web Image Collector remains installed;
   they are removed when every app using the area has been deleted.
 
 ### What you can delete inside the app (common §9)
 
-**Settings → Data** offers four actions:
+**Settings → Data** offers three actions:
 
 - **Clear image cache** — in-memory thumbnails, which are discarded when the app quits anyway.
 - **Clear original image cache** — the full-size bitmaps the viewer built.
 - **Clear resume history** — every record of how far you watched. Video files are not deleted.
-- **Empty Received folder** — **deletes from the device** the files other apps shared into this
-  app. This cannot be undone, so the size is shown and confirmation is required first.
 
-**Files in the iPhone folders** are deleted by selecting them on the folder screen (shared storage above).
+**Files in the iPhone Folder** are deleted by selecting them on the folder screen (shared storage above).
 
 **To delete a server profile and its credentials**, open **Manage profiles** on the first screen
 (the NAS profiles list) and swipe that row away. Deleting the profile removes its address, account
@@ -396,6 +395,10 @@ and recent-folder history from the Keychain with it. Nothing on the server itsel
 **Diagnostic logs** can be viewed under Settings → Diagnostics → Diagnostic log, where the current
 session file can be exported through the share sheet and the on-screen records can be cleared.
 Only the ten most recent session files are kept; older ones are removed automatically.
+
+### Encryption and export compliance (common §7)
+
+Besides HTTPS (TLS), this app contains SSH encryption for SFTP and SMB 3 encryption. It therefore does not claim the standard-encryption exemption key; export compliance is answered with an export-compliance document in App Store Connect (including the French declaration). All encryption is used only for connections to servers you own and addressed yourself.
 
 ---
 
