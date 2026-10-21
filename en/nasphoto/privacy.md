@@ -18,212 +18,116 @@ description: "What information Easy NAS Photo Viewer handles, where it is stored
 
 ## 1. Summary
 
-**The developer collects no user data.**
+The developer does not collect any user data.
 
-There is no developer-operated server, and the app has no network route to the developer.
-Your data moves between **your device** and **servers you own and configured yourself**.
-The developer cannot see any of it.
+There is no developer-operated server, and the app has no network connection to the developer. Your data moves between your device and the servers or websites you choose to connect to. The developer has no access to it.
 
-The app is free and shows **Google AdMob ads**. To load them, Google's advertising SDK inside the
-app sends some device data **directly to Google** (§6.1). The app asks once for iOS
-**App Tracking Transparency (ATT)** permission. **Only if you allow it** is the advertising identifier
-(IDFA) provided to Google for personalized ads; otherwise only **non-personalized ads** are requested
-(§6.1). The **in-app
-purchase** that removes ads is handled by Apple's App Store (§6.2).
+To keep the app free, it displays Google AdMob ads. When loading ads, Google's advertising SDK in the app sends certain device data directly to Google (§6.1). The app asks once for iOS App Tracking Transparency (ATT) permission. The advertising identifier (IDFA) is shared with Google for personalized ads only if you grant this permission; otherwise, the app requests only non-personalized ads (§6.1). In-app purchases to remove ads are processed by Apple's App Store (§6.2).
 
 ## 2. Principles
 
-- **Tracking only if you allow it.** The app asks once for App Tracking Transparency permission. If
-  you **allow** it, the advertising SDK uses the advertising identifier (IDFA) to request personalized
-  ads, which counts as **tracking** under Apple's definition. If you do **not** (denied, not yet decided,
-  or restricted), the IDFA is not provided and every ad request is marked **non-personalized**
-  (`npa=1`). The app's own code reads neither the advertising identifier nor any device identifier.
-  You can change your choice at any time in **iOS Settings › Privacy & Security › Tracking**.
-- **No analytics or crash-reporting SDK.** No third-party analytics SDK and no third-party
-  crash-reporting library is bundled. The one advertising SDK bundled is the **Google Mobile Ads
-  SDK** (including the User Messaging Platform for consent); the data it handles is described in §6.1.
-- **Nothing reaches the developer.** No usage records, device information, error reports, or
-  purchase information are transmitted to the developer.
-- **The developer neither sells nor shares user data.** The developer holds none to begin with.
-  Data the advertising SDK sends directly to Google is covered in §6.1.
+- **Tracking occurs only with your permission.** The app requests App Tracking Transparency permission once. If you allow it, the advertising SDK uses the advertising identifier (IDFA) to request personalized ads, which constitutes tracking under Apple's policy. If you do not allow it (whether denied, not yet decided, or restricted), the IDFA is not shared and all ad requests are sent as non-personalized (`npa=1`). The app's own code never reads the advertising identifier or any other device identifier. You can change this permission at any time in iOS Settings > Privacy & Security > Tracking.
+- **No analytics or crash-reporting SDKs.** The app does not include any third-party analytics or crash-reporting libraries. The only bundled third-party SDK for advertising is the Google Mobile Ads SDK (which includes the User Messaging Platform for consent management); the data it handles is described in §6.1.
+- **No data is sent to the developer.** Usage history, device information, error reports, and purchase details are never transmitted to the developer.
+- **No sale or sharing of user data.** Because the developer does not collect or hold any user data, nothing is sold or shared with third parties. Data sent directly to Google by the advertising SDK is covered in §6.1.
 
 ## 3. What the app stores on your device
 
 ### 3.1 iOS Keychain
 
-The app uses the iOS Keychain. What exactly is stored differs per app and is listed in the
-**per-app section** that follows this document.
+The app uses the iOS Keychain to store sensitive data securely. The specific items stored vary by app and are detailed in the per-app section below.
 
-The protection applied is the same in all three apps:
+All three apps apply the same security rules:
 
-- Accessibility attribute: **`kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`**.
-  - `ThisDeviceOnly` — these items are **not synchronized through iCloud Keychain** and are
-    **not included in device backups**. They never leave the device.
-  - `AfterFirstUnlock` — readable by the app while the screen is locked, but only after the
-    first unlock following a reboot.
-- **Credentials and certificate trust live in a per-app store.** Each app writes to its own
-  Keychain access group, so no app can read another app's passwords, accounts, or certificate trust.
-- **One exception: the ad-free purchase record.** So that buying ad removal in one app also removes
-  ads from the other two on the same device, the three apps share one access group
-  (`com.jjsuite.shared`) in which each app keeps a single item. It holds **only the ad-free status
-  (none, an expiry date, or lifetime) and when it was last updated** — no payment details, no
-  Apple ID, no receipt. This sharing happens only between this developer's apps on the same device.
-- iOS does not guarantee that deleting an app deletes its Keychain items. To be sure stored
-  credentials are gone, clear them inside the app **before** deleting it (§9). The ad-free record
-  stays after an app is deleted and keeps applying to the other two apps.
+- Items are saved with the `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` accessibility setting.
+  - `ThisDeviceOnly`: Items are not synced via iCloud Keychain and are excluded from device backups. They remain strictly on the device.
+  - `AfterFirstUnlock`: The app can read these items while the screen is locked, provided the device has been unlocked at least once after a reboot.
+- Credentials and certificate trust settings are isolated per app. Each app writes to its own dedicated Keychain access group, preventing one app from reading another app's passwords, accounts, or trusted certificates.
+- The only exception is the ad-free purchase status. If you purchase ad removal in one app, ads are also removed in the other two apps on the same device. To support this, all three apps share an access group (`com.jjsuite.shared`) where each app records a single entry containing only the ad-free status (none, expiration date, or lifetime) and the last update timestamp. No payment details, Apple ID, or receipts are stored. This sharing is limited to apps from this developer installed on the same device.
+- iOS does not always remove Keychain items automatically when an app is deleted. If you want to ensure your saved credentials are completely removed, please delete them within the app before uninstalling it (§9). The ad-free status remains in the Keychain after uninstallation so that it continues to apply to the other two apps.
 
 ### 3.2 App preferences (UserDefaults)
 
-Settings such as appearance (light/dark), list sort order, and display options are stored in
-the device's standard preferences store. Only the app itself can read them. The ad-consent state
-(§6.1) is also recorded there, by Google's consent SDK.
+General preferences such as appearance (light/dark), sort order, and display options are stored in standard local storage (UserDefaults) and are accessible only to the app itself. Your ad-consent status (§6.1) is also stored here by Google's consent SDK.
 
 ### 3.3 Files on the device
 
-Files the app creates, or that you save into it, stay **on the device** — in the app sandbox or,
-depending on the app, in a storage area shared between this developer's apps (described in the
-**per-app section**). The app reads **file timestamps within its own container** to sort and
-display files and to rotate diagnostic log files.
+Files created by the app or saved by you remain on your device, either in the app's sandbox or, depending on the app, in a shared container used by this developer's apps (see the per-app section). The app reads file creation and modification timestamps within its own container to sort and display files and to rotate diagnostic logs.
 
 ## 4. What goes to iCloud — settings only
 
-The app uses Apple's **iCloud Key-Value Store** to synchronize **some settings** with your own
-other devices.
+The app uses Apple's iCloud Key-Value Store to sync select preferences across your devices.
 
-- What syncs: **settings values** — toggles, enumerated choices (e.g. appearance, search
-  engine), numeric values, default folder path strings, and the active profile identifier (a UUID).
-- What does **not** sync: **any credential, including passwords**; the contents of photos,
-  videos, or documents; browsing history; bookmarks; diagnostic logs; the ad-free purchase
-  record; the ad-consent state.
-- **The store is per-app.** The three apps cannot overwrite each other's values.
-- This synchronization is **operated by Apple**. The data lives in your iCloud account and the
-  **developer has no access to it.**
-- There is no in-app toggle for it. Turning iCloud off for the app in iOS Settings stops it.
+- Synced data: preference values such as feature toggles, selected options (e.g., appearance or search engine), numeric settings, default folder path strings, and the active profile identifier (UUID).
+- Excluded data: passwords and other credentials, the contents of photos, videos, or documents, browsing history, bookmarks, diagnostic logs, ad-free purchase records, and ad-consent status.
+- Each app uses its own isolated iCloud store and cannot overwrite another app's settings.
+- Syncing is managed by Apple. Your settings remain in your personal iCloud account, and the developer has no access to them.
+- There is no in-app switch for iCloud sync, but you can disable it at any time by turning off iCloud for the app in iOS Settings.
 
-The exact list and count of synchronized keys differs per app and is given in the
-**per-app section**.
+The exact list and number of synced preference keys vary by app and are detailed in the per-app section.
 
 ## 5. Diagnostic log
 
-The app keeps a diagnostic log **on the device** to help with troubleshooting.
+The app maintains a local diagnostic log on your device to assist with troubleshooting.
 
-- Location: `Documents/diagnostics/` inside the app container (one text file per session,
-  the 10 most recent kept).
-- The log is **never transmitted automatically.** It leaves the device only when you
-  explicitly export it through the share sheet in Settings.
-- It may contain: timestamps and outcomes of operations, error messages, the address of a
-  server the app contacted and the request path, and the target of a failed request. One line
-  at session start records the device model, iOS version, and app version — values needed to
-  reproduce a problem, not an identifier unique to your device.
-- It does **not** contain passwords or two-factor seeds. Server session keys are masked
-  before being written.
+- Location: saved as per-session text files in `Documents/diagnostics/` inside the app container. Only the 10 most recent session files are retained.
+- No automatic transmission: logs are never sent automatically. They leave your device only if you manually export them using the share sheet in Settings.
+- What may be logged: operation timestamps and results, error messages, the addresses and request paths of servers contacted by the app, and target URLs of failed requests. At the start of each session, one line records the device model, iOS version, and app version to help reproduce issues; this does not include any unique device identifier.
+- What is excluded: passwords and two-factor authentication seeds are never logged, and server session keys are masked before being written to disk.
 
-If you attach a diagnostic log to a support request, be aware that the above travels with it.
-You are welcome to write in without attaching one.
+If you attach a diagnostic log to a support email, please note that the information above will be included. You may always contact support without attaching a log.
 
 ## 6. Who the app talks to
 
-The app's network connections go to destinations **you configured or opened yourself**, and to
-two services: **Google**, for ads (§6.1), and **Apple's App Store**, for the ad-free purchase (§6.2).
-The destinations you configure differ per app and are listed in the **per-app section**.
+The app makes network connections only to destinations that you configure or open yourself, as well as two external services: Google for serving ads (§6.1) and Apple's App Store for processing ad-free purchases (§6.2). User-configured destinations vary by app and are listed in the per-app section.
 
-What is true for all three: **no developer-operated server exists.** The app sends the
-developer no requests of any kind.
+Across all three apps, there is no developer-operated server, and the app never sends requests to the developer.
 
 ### 6.1 Ads — Google AdMob
 
-- **When ads appear**: only while you wait for something the app is doing — for example connecting
-  to a server, transferring files, or adding a task. A 300×250 banner labelled "Ad" appears inside the
-  progress window for at least 2 seconds. There is **no ad at launch and no ad on a timer**, and none in
-  the first 5 seconds after the app starts. No ad is shown once you have bought ad removal, before ad
-  consent is settled, or when no ad has been loaded — the progress window then simply shows progress.
-- **Tracking permission (ATT) and personalized ads**: on the **first launch**, after the ad-consent check
-  (below), while the app is on screen, it shows iOS's tracking-permission prompt **once** and never again.
-  - If you **allow** it, the advertising identifier (IDFA) is provided to Google and you may see
-    **personalized ads** based on your interests and your activity in other companies' apps and
-    websites. Under Apple's definition this is **tracking**.
-  - If you do **not** allow it (or it is restricted on the device), the IDFA is not provided and every
-    ad request is marked non-personalized (`npa=1`).
-  - Either way the app works the same and shows the same number of ads. Change your choice at any
-    time with this app's switch in **iOS Settings › Privacy & Security › Tracking**.
-- **Consent**: at start-up the app uses Google's User Messaging Platform to check whether consent
-  is required, and in the European Economic Area, the UK and similar regions it shows Google's
-  consent form **before** requesting any ad. Without confirmed consent, no ad is requested. You can
-  change your choice at any time under **Settings → Remove Ads → Ad Privacy Settings** (the row
-  appears only in regions where consent is required).
-- **Data Google may process** (per Google's published AdMob disclosure): device identifiers,
-  advertising data (which ads you saw and tapped), product interaction (app launches, taps),
-  coarse location (estimated from the IP address), and diagnostics (performance and errors). The
-  purposes are **advertising** — serving and measuring ads and preventing fraud — and Google's analytics
-  and ad-performance measurement. Of these, **device identifiers may be used for tracking** (the IDFA,
-  if you allowed tracking), and coarse location, advertising data, product interaction and device
-  identifiers may be linked to you on Google's side. If you do not allow tracking, the IDFA is not provided.
-- The Google SDK inside the app sends this data **directly to Google's servers**. It does not pass
-  through any developer server, and the developer receives no individual user data — only
-  **aggregate reports** such as impressions and earnings in AdMob.
-- Tapping an ad opens the advertiser's website or App Store page; what happens there is governed by
-  that site's policy.
-- Google's processing is governed by Google's policies:
-  [Google Privacy Policy](https://policies.google.com/privacy) ·
-  [How Google uses information from sites or apps that use its services](https://policies.google.com/technologies/partner-sites).
+- **When ads appear**: Ads are shown only while you are waiting for an operation to finish, such as connecting to a server, transferring files, or adding a task. A 300×250 banner labeled "Ad" is displayed inside the progress dialog for at least 2 seconds. There are no launch ads, no timed interstitial ads, and no ads during the first 5 seconds after opening the app. If you have purchased ad removal, if ad consent has not been completed, or if no ad is ready, the dialog simply shows the progress state.
+- **Tracking permission (ATT) and personalized ads**: On first launch, after completing the regional consent check below, the app presents the iOS App Tracking Transparency prompt once while the app is active.
+  - If you allow tracking, your advertising identifier (IDFA) is shared with Google, and you may receive personalized ads based on your interests and activity across other apps and websites. Under Apple's guidelines, this constitutes tracking.
+  - If you do not allow tracking (or if tracking is restricted on your device), the IDFA is withheld and all ad requests include the non-personalized flag (`npa=1`).
+  - App functionality and ad frequency remain the same regardless of your choice. You can update your preference at any time in iOS Settings > Privacy & Security > Tracking.
+- **Regional consent**: At startup, the app uses Google's User Messaging Platform to check whether regional privacy regulations apply. In the European Economic Area (EEA), the UK, and similar jurisdictions, Google's consent form is presented before any ads are requested. No ad requests are made without confirmed consent. You can review or change your consent choices at any time in Settings > Remove Ads > Ad Privacy Settings (this option is visible only in regions where consent is required).
+- **Data processed by Google** (per Google's AdMob disclosures): device identifiers, advertising data (ads viewed and tapped), product interactions (app launches and taps), coarse location (inferred from your IP address), and diagnostics (performance and crash data). Google uses this information to serve and measure ads, prevent fraud, and perform analytics. Device identifiers (specifically the IDFA, if you allow tracking) may be used for tracking, and coarse location, advertising data, product interactions, and device identifiers may be linked to your identity by Google. If you decline tracking, the IDFA is not provided.
+- All ad-related data is sent directly from the Google SDK in the app to Google's servers. It never passes through a developer server, and the developer only sees aggregate statistics such as total impressions and earnings in the AdMob console.
+- Tapping an ad opens the advertiser's website or App Store listing, which is governed by that third party's own privacy policy.
+- For more details on how Google handles data, please see the [Google Privacy Policy](https://policies.google.com/privacy) and [How Google uses information from sites or apps that use its services](https://policies.google.com/technologies/partner-sites).
 
 ### 6.2 Ad-free purchase — Apple App Store
 
-- The app sells three ad-removal products: **1 month** and **1 year** (non-renewing — never charged
-  automatically) and **lifetime** (a one-time purchase).
-- Payment is **processed by Apple on the App Store**. Neither the app nor the developer receives
-  payment details such as card numbers, or your Apple ID. No information identifying the buyer is
-  passed to the developer.
-- The app uses Apple's StoreKit to read this app's purchase history on the device (which product
-  was bought when, and whether it was refunded), calculates the ad-free period, and stores **only
-  the result (status and expiry date)** in the shared Keychain item described in §3.1.
-- **Restore Purchases** syncs with the App Store to fetch the purchase history again.
+- The app offers three in-app purchase options to remove ads: 1-month and 1-year passes (non-renewing, so they never auto-charge) and a lifetime pass (one-time purchase).
+- All payments are processed by Apple through the App Store. Neither the app nor the developer receives your payment details, credit card number, Apple ID, or any other personally identifiable buyer information.
+- The app uses Apple's StoreKit framework to check on-device purchase records (product ID, purchase date, and refund status) to calculate your active ad-free period, and saves only the resulting status and expiration date to the shared Keychain item described in §3.1.
+- Tapping "Restore Purchases" syncs with the App Store to retrieve your previous purchase records.
 
 ## 7. Security
 
-- **Encrypted connections are preferred.** Where the other end supports it, the app talks to
-  servers over standard HTTPS (TLS).
-- **Plain HTTP is not blocked, because some cases need it.** All three apps declare
-  `NSAllowsArbitraryLoads = true`, so a destination that offers only HTTP is reached in the
-  clear. Which cases those are, and why, is stated in the **per-app section**. In every case
-  the destination is a website you opened yourself or a server you own and addressed yourself;
-  no connection goes to the developer (§6).
-- The app uses only standard encryption (such as TLS, and in some apps SSH and SMB 3) and answers
-  export-compliance questions in its App Store information as U.S. export rules and Apple require. How
-  each app answers is stated in the **per-app section**.
-- Credentials are held in the iOS Keychain as described in §3.1.
-- For hosts you explicitly choose to trust, the app stores that certificate's fingerprint and
-  checks it on later connections. Certificate errors for hosts you have not approved are not
-  bypassed.
+- **Encrypted connections by default**: Whenever supported by the destination server, the app communicates over standard HTTPS (TLS).
+- **Plain HTTP exceptions**: All three apps set `NSAllowsArbitraryLoads = true` so they can connect to destinations that only support unencrypted HTTP. The specific scenarios where plain HTTP is used, and the reasons for them, are explained in the per-app section. In all cases, the destination is either a website you opened directly or a personal server whose address you entered yourself; no traffic ever goes to the developer (§6).
+- **Encryption and export compliance**: The app relies solely on standard encryption protocols (TLS, plus SSH and SMB 3 in applicable apps) and completes Apple's App Store export compliance declarations in accordance with U.S. export regulations. App-specific declarations are noted in the per-app section.
+- **Credential storage**: Login credentials are stored in the iOS Keychain as outlined in §3.1.
+- **Certificate verification**: When you explicitly choose to trust a host with a self-signed or untrusted certificate, the app saves that certificate's fingerprint and verifies it on subsequent connections. Certificate errors for unapproved hosts are blocked.
 
 ## 8. Children's privacy (COPPA)
 
-The developer collects no personal information from anyone, children under 13 included. The app
-is not directed at children. Personalized ads are requested only if you allow tracking; otherwise only
-non-personalized ads are requested. The data the advertising
-SDK sends to Google is described in §6.1; everything else stays on your device and on servers you own.
+The developer does not collect personal information from anyone, including children under the age of 13, and the app is not directed at children. Personalized ads are requested only when tracking permission is granted; otherwise, only non-personalized ads are served. Data transmitted to Google by the advertising SDK is covered in §6.1, while all other data remains on your device and your own servers.
 
 ## 9. Your control and how to delete data
 
-- **Delete the app** — removes that app's local data: files in its sandbox and its settings. For an
-  app that uses a storage area shared between this developer's apps, files there remain as long as
-  any app using that area is still installed (see the **per-app section**). For Keychain items, see §3.1.
-- **Delete from within the app** — the Settings screen lets you clear stored data. Where those
-  controls live differs per app; what can be cleared is listed in the **per-app section**.
-- **Turn off settings sync** — iOS Settings → [your name] → iCloud → turn iCloud off for this app.
-- **Change tracking permission** — turn off this app's switch in iOS Settings › Privacy & Security ›
-  Tracking. Later ad requests then become non-personalized (`npa=1`).
-- **Change ad consent** — Settings → Remove Ads → Ad Privacy Settings (in regions where consent is
-  required). Requests to access or delete advertising data Google has processed go to Google, under
-  Google's policies (links in §6.1).
+- **Uninstalling the app**: Deleting the app removes its local sandbox files and preferences. If the app uses a shared storage container with another app from this developer, files in that shared container remain on the device as long as any sibling app using it stays installed (see the per-app section). For Keychain retention details, see §3.1.
+- **Clearing data within the app**: You can delete stored data directly from the app's Settings screen. Available deletion options and their menu locations are listed in the per-app section.
+- **Disabling iCloud settings sync**: Open iOS Settings > [your name] > iCloud, and turn off iCloud access for this app.
+- **Revoking tracking permission**: Turn off the app's switch in iOS Settings > Privacy & Security > Tracking. All subsequent ad requests will use non-personalized mode (`npa=1`).
+- **Managing ad consent**: In regions where consent is required, go to Settings > Remove Ads > Ad Privacy Settings. Requests to access or delete advertising data processed by Google should be submitted directly to Google under its privacy policies (linked in §6.1).
 
-Because the developer holds no user data, there is nothing to request access to, correct, or
-erase from the developer.
+Because the developer does not store any personal data, there are no user records held by the developer to access, correct, or delete.
 
 ## 10. Changes to this policy
 
-Material changes will be stated in the App Store "What's New" for the new version, and the
-"Last updated" date above will be revised.
+If material changes are made to this policy, they will be noted in the App Store "What's New" release notes for the updated version, and the "Last updated" date at the top of this document will be revised.
 
 ## 11. Contact
 
@@ -236,169 +140,102 @@ Material changes will be stated in the App Store "What's New" for the new versio
 
 ### Keychain items in this app (common §3.1)
 
-The Keychain service name is `com.jjnasphoto.keychain`, and credentials are stored in this app's
-own access group `$(AppIdentifierPrefix)com.jjnasphoto.app`. They are not shared with the sibling apps.
+This app uses the Keychain service name `com.jjnasphoto.keychain` and stores credentials in its dedicated access group (`$(AppIdentifierPrefix)com.jjnasphoto.app`). These credentials are not shared with sibling apps.
 
-Two things are stored for this app alone:
+Two types of items are stored exclusively for this app:
 
-1. **Server profiles** (`nas.profiles.v2`) — for each registered server. Synology NAS, SMB and SFTP
-   servers use the same store.
-   - All servers: server type, address, port, account name, **password** (SFTP may use a private key instead), folder settings
-     (default folder, recent folders), and a profile identifier (UUID).
-   - Synology NAS: whether a QuickConnect ID and HTTPS are used, the two-factor (TOTP) seed, and the
-     trusted-device token issued by DSM with its expiry.
+1. **Server profiles** (`nas.profiles.v2`): Stores connection details for each registered server. Synology NAS, SMB, and SFTP servers share this store.
+   - Common fields: server type, address, port, username, password (SFTP can use a private key instead), folder settings (default folder and recent folders), and a profile identifier (UUID).
+   - Synology NAS: QuickConnect ID and HTTPS preferences, two-factor authentication (TOTP) seed, and the trusted-device token and expiration issued by DSM.
    - SMB servers: share name and domain.
-   - SFTP servers: start path, authentication method (password / private key), the **OpenSSH private key**
-     you imported (Ed25519 or RSA) and its **passphrase**, and the **server host-key fingerprint**
-     (`SHA256:…`) you trusted on first connection.
-2. **NAS certificate trust fingerprints** (`certtrust.nas.v1`) — the fingerprint of a self-signed
-   certificate the user explicitly approved in an alert, checked against on later connections.
+   - SFTP servers: starting path, authentication method (password or private key), the imported OpenSSH private key (Ed25519 or RSA) and its passphrase, and the server host-key fingerprint (`SHA256:…`) approved on first connection.
+2. **NAS certificate trust fingerprints** (`certtrust.nas.v1`): Stores the fingerprint of any self-signed certificate you explicitly approve in an alert, which is verified on future connections.
 
-As stated in common §3.1 these items are stored **device-only**: they do not sync through
-iCloud Keychain and are not included in device backups. Separately, the **ad-free status item**
-common to all three apps sits in the shared group (common §3.1).
+As described in common §3.1, these items are stored for this device only; they do not sync via iCloud Keychain and are excluded from device backups. In addition, the shared access group holds one ad-free status entry common to all three apps (common §3.1).
 
 ### What goes to iCloud (common §4)
 
-This app syncs **13** preference keys through the iCloud Key-Value store:
+This app syncs 13 preference keys via the iCloud Key-Value Store:
 
-appearance (light/dark), grid column count, default upload folder path, NAS sort field,
-sort direction, folder view mode (grid/list), auto-rename-on-conflict, active profile
-identifier (UUID), video skip seconds, default playback engine, whether the playback picker is
-shown, autoplay-next, and the slideshow interval.
+- Synced keys: appearance (light/dark), grid column count, default upload folder path, NAS sort field, sort direction, folder view mode (grid/list), automatic renaming on filename conflict, active profile identifier (UUID), video skip interval (seconds), default playback engine, whether to show the playback engine picker, autoplay next video, and slideshow interval.
+- Not synced: passwords and other credentials, the contents of photos, videos, or documents, video resume positions, last browsed folder, recent folder history, and diagnostic logs (the last browsed location and recent folders are device-specific states and are intentionally excluded).
 
-**Not synced**: any credential including passwords, the contents of photos, videos or documents,
-resume positions, the last location you were browsing, the recent-folder list, and diagnostic logs.
-(The last location and recent folders are per-device state and were deliberately left out.)
-
-The KVS container identifier is `$(TeamIdentifierPrefix)com.jjnasphoto.app`, private to this app.
+The iCloud Key-Value Store container identifier is `$(TeamIdentifierPrefix)com.jjnasphoto.app`, which is isolated to this app.
 
 ### Who this app talks to (common §6)
 
-**The servers whose addresses the user typed into server settings**, of three kinds: a **Synology NAS**,
-an **SMB file server** (a shared folder on Windows, macOS, or a NAS), and an **SFTP server** (a file server
-reached over SSH). On top of that come the ads
-(Google) and the ad-free purchase (Apple App Store) common to all three apps (common §6.1, §6.2).
+This app connects to the servers you configure in server settings, which may be a Synology NAS, an SMB file server (such as a shared folder on Windows, macOS, or a NAS), or an SFTP server over SSH. In addition, it connects to Google for ads and Apple's App Store for in-app purchases, as shared across all three apps (common §6.1, §6.2).
 
-- The address is entered by the user — a LAN address, a public domain or IP, or (for Synology) a
-  QuickConnect ID. The port and whether to use HTTPS are the user's choice too.
-- When, and only when, a QuickConnect ID is used, the app queries **Synology's QuickConnect
-  resolution service** to turn that ID into a reachable address.
-- **No discovery, no scanning.** There is no Bonjour/mDNS browsing, no subnet scan and no device
-  discovery code in the app.
-- **There is no web browser in this app.** No code path opens an arbitrary website.
-- **Uploads go only to a Synology NAS.** When you upload files from an iPhone folder, or items picked
-  from your photo library, the app writes the request body to a temporary file on the device and hands
-  it to iOS **background transfer**, so iOS keeps sending it **to the same NAS** even if you lock the
-  screen or switch apps. The temporary files are deleted when the transfer ends. SMB and SFTP servers are
-  used only for browsing, downloading and playback.
-- **SFTP host-key pinning (trust on first use)**: the first time you connect to an SFTP server, the app
-  shows its host-key fingerprint and connects only if you trust it. The trusted fingerprint is saved in
-  the profile, and the connection is blocked if the server's key later changes.
-- Video playback from a Synology NAS uses plain HTTP (below). Videos on an SMB server are read by the
-  built-in VLC directly from that server over SMB; videos on an SFTP server are read by the app over
-  SFTP and fed to the built-in VLC. No address containing credentials is passed to another app.
+- You enter the server address yourself (a local network IP, public domain or IP, or Synology QuickConnect ID) and choose the port and HTTPS setting.
+- Only when you use a QuickConnect ID does the app query Synology's QuickConnect resolution service to resolve that ID into a connectable address.
+- The app does not scan or discover devices on your network. It contains no Bonjour/mDNS browsing, subnet scanning, or automatic device discovery code.
+- This app does not include a web browser and has no code path to open general websites.
+- File uploads are supported only for Synology NAS servers. When you upload files from the iPhone Folder or select items from your photo library, the app writes the upload payload to a temporary local file and hands the transfer to the iOS background transfer service. This allows iOS to continue uploading to your NAS even if you lock the screen or switch apps. Temporary files are deleted once the transfer completes. SMB and SFTP servers are used only for browsing, downloading, and media playback.
+- SFTP host-key pinning (Trust On First Use): The first time you connect to an SFTP server, the app displays the server's host-key fingerprint and connects only after you approve it. The fingerprint is saved to the server profile, and future connections are blocked if the server's key changes.
+- Video playback from a Synology NAS uses unencrypted HTTP (explained below). Videos on an SMB server are streamed directly over SMB by the built-in VLC player, while videos on an SFTP server are read over SFTP by the app and piped to the built-in VLC player. URLs containing credentials are never passed to external apps.
 
 ### When unencrypted transfer is used, and why (common §7)
 
-There are **only three cases**, and in all of them the other end is **the user's own server, at an
-address the user typed in.**
+Unencrypted transfers occur in only three situations, and in all of them the destination is your own server at an address you entered:
 
-1. **The NAS does not offer HTTPS.** A home NAS usually sits on the LAN and DSM's default is
-   plain HTTP on port 5000. If the user has not enabled HTTPS on the NAS, the connection is in
-   the clear. If they have, the app uses HTTPS — it never downgrades one that works.
-2. **Video playback.** The playback engines (MobileVLCKit, AVPlayer, external VLC) each use
-   their own network stack and cannot share the self-signed certificate trust the app has
-   stored, so the HTTPS leg fails silently. Playback URLs are therefore built against the same
-   NAS's HTTP port, exactly as Synology's own DS file client does.
-3. **SMB servers.** The app does not turn on SMB 3 transport encryption; it uses signing and
-   authentication only. **File contents exchanged over SMB are therefore not encrypted on the
-   network.** It is meant for a trusted network such as a home or office LAN.
+1. **Your NAS does not use HTTPS**: Home NAS devices typically run on a local network where Synology DSM defaults to plain HTTP on port 5000. If you have not enabled HTTPS on your NAS, the app connects over HTTP. If HTTPS is enabled, the app uses HTTPS and never downgrades the connection.
+2. **Video playback**: Media playback engines (MobileVLCKit, AVPlayer, and external VLC) each maintain their own network stack and cannot share the self-signed certificate trust stored by the app, causing HTTPS playback to fail silently. As a result, playback URLs use the NAS's HTTP port, matching the behavior of Synology's official DS file app.
+3. **SMB servers**: The app uses SMB signing and authentication but does not enable SMB 3 transport encryption. File contents transferred over SMB are therefore unencrypted on the network, and SMB support is intended for trusted networks such as a home or office LAN.
 
-**SFTP is not on this list** — it connects over SSH, so authentication and file contents are both
-**encrypted** in transit.
+SFTP connections are not affected by these exceptions; SFTP runs over SSH, encrypting both authentication and file contents in transit.
 
-In every case the destination is a single machine the user owns, and traffic crosses the
-internet only if the user has exposed that server themselves. No connection goes to the developer
-in any case. This premise is also stated in the Requirements section of the App Store description.
+In all three cases, traffic goes solely to your own server and crosses the internet only if you have configured your server for remote access. No connection is ever made to the developer. This requirement is also noted in the Requirements section of the App Store description.
 
 ### Permissions this app requests
 
 | Permission | Info.plist key | What it is actually for |
 |---|---|---|
-| Photos — **add only** | `NSPhotoLibraryAddUsageDescription` | Saving a photo you are viewing into the iPhone Photos app. **Read access to the photo library is never requested** — there is no read-permission key in the app |
-| Local Network | `NSLocalNetworkUsageDescription` | Reaching a NAS, SMB or SFTP server on a private IP address (e.g. 192.168.x.x). iOS asks once, the first time a private address is contacted |
-| App Tracking Transparency | `NSUserTrackingUsageDescription` | Common to all three apps — asked once after ad consent. Allow it for personalized ads; otherwise ads are non-personalized (common §6.1). Change it in iOS Settings › Privacy & Security › Tracking |
+| Photos (add only) | `NSPhotoLibraryAddUsageDescription` | Used only when saving a photo you are viewing into the iPhone Photos app. The app never requests read access to your photo library and does not include a read-permission key. |
+| Local Network | `NSLocalNetworkUsageDescription` | Used to connect to a NAS, SMB, or SFTP server on a private IP address (e.g., 192.168.x.x). iOS prompts once the first time a local network address is contacted. |
+| App Tracking Transparency | `NSUserTrackingUsageDescription` | Common to all three apps, requested once after the ad-consent check. Allowing it enables personalized ads; otherwise, only non-personalized ads are requested (common §6.1). You can change this in iOS Settings > Privacy & Security > Tracking. |
 
-That is the complete list. The app does not request location, contacts, microphone, camera,
-health or notification permissions.
+No other permissions—such as location, contacts, microphone, camera, health, or notifications—are requested.
 
-**Uploading from your photo library — no permission, only what you pick.** "Upload from Photo
-Library…" on a folder screen opens iOS's photo picker (PHPicker). The picker is a **system screen
-separate from the app**: the app cannot see your library, and receives **only the photos and videos
-you pick**, which is why no read permission is requested. Picked items are copied unchanged into a
-temporary folder on the device, uploaded to your NAS, and the temporary copies are deleted.
+When you choose "Upload from Photo Library…" on a folder screen, the app opens the standard iOS photo picker (PHPicker). Because PHPicker runs as a separate system process, the app cannot browse your photo library and receives only the specific photos and videos you select, which requires no photo library read permission. Selected items are copied unmodified to a temporary local folder for upload to your NAS and deleted immediately afterward.
 
 ### Third-party libraries
 
-Open-source libraries, plus the advertising SDK common to all three apps:
+This app uses the following open-source libraries along with the advertising SDK shared by all three apps:
 
-- **MobileVLCKit 3.7.3** (VideoLAN, LGPL v2.1 or later) — decodes media in the "Built-in VLC"
-  playback mode and reads videos from SMB servers.
-- **AMSMB2 4.0.3** (with libsmb2, LGPL v2.1 or later) — active only when connecting to an SMB server.
-- **The SFTP stack** — active only when connecting to an SFTP server: **Citadel 0.12.1** (MIT),
-  **swift-nio-ssh** (the fork Citadel uses), **swift-nio**, **swift-asn1**, **swift-log**, **swift-atomics**,
-  **swift-collections**, **swift-system** (Apache 2.0), **swift-crypto** (Apache 2.0, with BoringSSL —
-  OpenSSL / SSLeay / ISC), and **BigInt** (MIT).
-- **Google Mobile Ads SDK** (with the User Messaging Platform) — for showing ads only; see common **§6.1**.
+- **MobileVLCKit 3.7.3** (VideoLAN, LGPL v2.1 or later): Decodes media in the "Built-in VLC" playback mode and streams videos from SMB servers.
+- **AMSMB2 4.0.3** (including libsmb2, LGPL v2.1 or later): Used only when connecting to SMB servers.
+- **SFTP networking stack**: Used only when connecting to SFTP servers, comprising Citadel 0.12.1 (MIT), swift-nio-ssh (Citadel fork), swift-nio, swift-asn1, swift-log, swift-atomics, swift-collections, swift-system (Apache 2.0), swift-crypto (Apache 2.0, including BoringSSL under OpenSSL / SSLeay / ISC licenses), and BigInt (MIT).
+- **Google Mobile Ads SDK** (including the User Messaging Platform): Used solely to display ads (see common §6.1).
 
-None of the open-source libraries has network-collection, analytics or advertising functionality.
-The two LGPL libraries (MobileVLCKit, AMSMB2) are linked as dynamic frameworks. The licences,
-copyrights and source repository links of all of them are shown in-app under
-**Settings → Open Source Licences**.
-
-There are no analytics SDKs or crash-reporting libraries.
+None of the open-source libraries include data collection, analytics, or advertising features. The two LGPL libraries (MobileVLCKit and AMSMB2) are linked as dynamic frameworks. Full license texts, copyright notices, and source repository links are available in the app under Settings > Open Source Licenses. No analytics or crash-reporting SDKs are included.
 
 ### Shared storage — the "iPhone Folder" shared with the Web Image app (common §3.3, §9)
 
-This app's "iPhone Folder" is a **shared storage area** on the device (`Files/` inside the App
-Group `group.com.jjsuite.shared`), used together with the developer's **Easy Web Image Collector**.
+This app's "iPhone Folder" uses a shared on-device container (`Files/` inside the App Group `group.com.jjsuite.shared`) alongside the developer's sibling app, Easy Web Image Collector.
 
-- Files downloaded from the NAS, files received through another app's share sheet, images saved by
-  Easy Web Image Collector, and folders you create all sit together in **one folder**. Both apps see
-  the same folder.
-- Both apps can **read and delete** files in this area. Files leave the device only when you upload
-  them to your own NAS.
-- This area is **not visible under "On My iPhone" in the Files app.** Files you put into this app's
-  folder through the Files app or Finder, and files an earlier version kept in the app's own folder
-  (`Documents/`) or in the former sub-folders (Received, Downloads, Web Images), are moved into this
-  folder on the next launch (diagnostic logs excepted).
-- Deleting this app leaves these files in place while Easy Web Image Collector remains installed;
-  they are removed when every app using the area has been deleted.
+- Files downloaded from your NAS, files received via the iOS share sheet, images saved by Easy Web Image Collector, and folders you create are all stored in this single shared folder and appear in both apps.
+- Both apps can read and delete files in this folder. Files leave the device only when you manually upload them to your NAS.
+- This shared container does not appear under "On My iPhone" in the iOS Files app. Any files placed into the app's folder via Finder or the Files app, as well as files stored in legacy app folders (`Documents/` or earlier subfolders like Received, Downloads, and Web Images), are automatically migrated to this shared folder on the next launch (excluding diagnostic logs).
+- If you uninstall this app while Easy Web Image Collector remains on your device, the files in the shared folder are retained. They are deleted by iOS once all apps sharing the container have been uninstalled.
 
 ### What you can delete inside the app (common §9)
 
-**Settings → Data** offers three actions:
+Under Settings > Data, you can clear three types of cached data:
 
-- **Clear image cache** — in-memory thumbnails, which are discarded when the app quits anyway.
-- **Clear original image cache** — the full-size bitmaps the viewer built.
-- **Clear resume history** — every record of how far you watched. Video files are not deleted.
+- **Clear image cache**: Removes in-memory thumbnails (which are also cleared automatically when the app closes).
+- **Clear original image cache**: Removes full-resolution cached bitmaps generated by the image viewer.
+- **Clear resume history**: Deletes saved playback positions for all videos without deleting the video files themselves.
 
-**Files in the iPhone Folder** are deleted by selecting them on the folder screen (shared storage above).
+Other data can be managed as follows:
 
-**To delete a server profile and its credentials**, open **Manage profiles** on the first screen
-(the NAS profiles list) and swipe that row away. Deleting the profile removes its address, account
-and recent-folder history from the Keychain with it. Nothing on the server itself is deleted.
-
-**Ad consent** is changed under Settings → Remove Ads → Ad Privacy Settings (where consent is required).
-
-**Diagnostic logs** can be viewed under Settings → Diagnostics → Diagnostic log, where the current
-session file can be exported through the share sheet and the on-screen records can be cleared.
-Only the ten most recent session files are kept; older ones are removed automatically.
+- **Files in the iPhone Folder**: Select and delete items directly on the folder screen.
+- **Server profiles and credentials**: Open Manage profiles on the home screen (the NAS profile list) and swipe left on a profile to delete it. This removes the server address, account credentials, and recent folder history from the Keychain, without affecting any files on your server.
+- **Ad consent**: In regions where consent is required, update your preference under Settings > Remove Ads > Ad Privacy Settings.
+- **Diagnostic logs**: Go to Settings > Diagnostics > Diagnostic log to view logs, export the current session file via the share sheet, or clear the on-screen log. Only the 10 most recent session files are kept on disk; older ones are deleted automatically.
 
 ### Encryption and export compliance (common §7)
 
-Besides HTTPS (TLS), this app contains SSH encryption for SFTP and SMB 3 encryption. It therefore does not claim the standard-encryption exemption key; export compliance is answered with an export-compliance document in App Store Connect (including the French declaration). All encryption is used only for connections to servers you own and addressed yourself.
+In addition to standard HTTPS (TLS), this app includes SSH encryption for SFTP and SMB 3 encryption. Accordingly, rather than claiming the standard encryption exemption key, export compliance is fulfilled by submitting export compliance documentation in App Store Connect (including the French encryption declaration). All encryption is used strictly for connections to servers that you own and configure yourself.
 
 ---
 
