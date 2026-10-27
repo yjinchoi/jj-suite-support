@@ -3,11 +3,11 @@ layout: default
 lang: ko
 permalink: /
 alt: /en/
-description: "Easy Web Image Collector · Easy NAS Photo Viewer · Easy NAS Download Manager 의 개인정보 처리방침과 지원 페이지"
+description: "Easy Web Image Collector · Easy NAS Photo Viewer · Easy NAS Download Manager · NAS Player 의 개인정보 처리방침과 지원 페이지"
 ---
 # jj-suite 앱 지원
 
-<p class="lead">아래 iOS 앱들의 개인정보 처리방침과 지원 페이지입니다.</p>
+<p class="lead">아래 iOS · tvOS 앱들의 개인정보 처리방침과 지원 페이지입니다.</p>
 
 <ul class="app-list">
 {%- for pair in site.data.apps %}

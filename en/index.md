@@ -3,11 +3,11 @@ layout: default
 lang: en
 permalink: /en/
 alt: /
-description: "Privacy policies and support pages for Easy Web Image Collector, Easy NAS Photo Viewer and Easy NAS Download Manager"
+description: "Privacy policies and support pages for Easy Web Image Collector, Easy NAS Photo Viewer Easy NAS Download Manager and NAS Player"
 ---
 # jj-suite app support
 
-<p class="lead">Privacy policies and support pages for the following iOS apps.</p>
+<p class="lead">Privacy policies and support pages for the following iOS and tvOS apps.</p>
 
 <ul class="app-list">
 {%- for pair in site.data.apps %}

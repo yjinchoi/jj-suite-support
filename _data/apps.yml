@@ -13,3 +13,8 @@ torrent:
   icon: /assets/img/torrent-180.png
   subtitle_ko: Synology Download Station 원격제어
   subtitle_en: Remote for Download Station
+nasplayer-tv:
+  name: NAS Player
+  icon: /assets/img/nasplayer-tv-180.png
+  subtitle_ko: Apple TV 에서 NAS 의 사진·동영상 보기 (tvOS)
+  subtitle_en: Watch NAS photos & videos on Apple TV
