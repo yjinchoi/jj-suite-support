@@ -12,7 +12,7 @@ description: "What information NAS Player for Apple TV handles, where it is stor
 # Privacy Policy
 
 **Applies to**: NAS Player (tvOS · App Store name: Easy NAS Player TV)
-**Last updated**: 2026-10-27 **Version**: 1.0
+**Last updated**: 2026-10-29 **Version**: 1.0
 
 ---
 
@@ -57,13 +57,13 @@ Values such as appearance, sort order, view mode, grid columns, playback engine,
 - When you play a video from an SFTP server that has a subtitle file of the same name, the subtitle is read into the device's temporary folder so it can be attached to playback. This is a transient part of playback, not a user-facing download feature.
 - Original photos and videos are never stored on Apple TV.
 
-## 4. What goes to iCloud — settings only
+## 4. What is written to iCloud — settings only
 
-The app uses Apple's iCloud Key-Value Store (identifier `$(TeamIdentifierPrefix)com.nasplayer.tv`, used by this app only) to sync some preferences with your other Apple TVs on the same Apple Account.
+When you change settings, the app writes some preferences to Apple's iCloud Key-Value Store (identifier `$(TeamIdentifierPrefix)com.nasplayer.tv`, used by this app only). **Version 1.0 does not read these values back on your other Apple TVs** — settings stay per device.
 
-- Synced: appearance, grid columns, NAS list sort field and direction, folder view mode, active profile identifier (UUID), skip interval, default playback engine, whether to show the playback picker, auto-play next video, upscaling/sharpening, slideshow interval. Because the app shares its settings format with the iPhone edition, two upload-related values (default upload folder path, auto-numbering on name conflict) are also on the list, although NAS Player has no upload feature.
-- Not synced: all credentials including passwords, original photos and videos, video resume points, last location, recent folders, diagnostic logs.
-- The data is kept in your iCloud account and the developer cannot access it. There is no in-app sync switch; nothing syncs when you are signed out of iCloud.
+- Written: appearance, grid columns, NAS list sort field and direction, folder view mode, active profile identifier (UUID), skip interval, default playback engine, whether to show the playback picker, auto-play next video, upscaling/sharpening, slideshow interval. Because the app shares its settings format with the iPhone edition, two upload-related values (default upload folder path, auto-numbering on name conflict) are also written, although NAS Player has no upload feature.
+- Not written: all credentials including passwords, original photos and videos, video resume points, last location, recent folders, diagnostic logs.
+- The data is kept in your iCloud account and the developer cannot access it. There is no in-app switch for this; nothing is written when you are signed out of iCloud.
 
 ## 5. Diagnostic log
 
@@ -122,7 +122,7 @@ The developer does not collect personal information from anyone, including child
 - **Resume history**: Settings → Data → Clear resume history.
 - **Image cache**: Settings → Data → Clear image cache (memory only; also cleared when the app closes).
 - **Diagnostic log**: clear the on-screen entries under Settings → Diagnostics → Diagnostic log.
-- **Deleting the app** removes the settings and files in its container. tvOS does not guarantee that Keychain items are removed with the app, so delete your profiles in the app first to be sure. Settings already synced to iCloud may remain on your other Apple TVs on the same Apple Account.
+- **Deleting the app** removes the settings and files in its container. tvOS does not guarantee that Keychain items are removed with the app, so delete your profiles in the app first to be sure. Settings already written to iCloud may remain in your iCloud account.
 
 Because the developer holds no user data, there is nothing to request from the developer for access, correction or deletion.
 

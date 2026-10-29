@@ -111,7 +111,7 @@ Thumbnails and images are kept in memory only for a while and disappear when the
 
 ### Q. Do my settings sync to my other Apple TV?
 
-**Some settings do.** Values such as appearance, sort order, view mode and playback engine travel to your other Apple TVs on the same Apple Account via Apple's iCloud Key-Value Store.
+**Not in version 1.0.** Settings are set per Apple TV (some preferences are written to the iCloud Key-Value Store but are not read back on other devices — see section 4 of the privacy policy).
 **Your NAS address, account and password do not sync** — they are stored only in this device's Keychain (`ThisDeviceOnly`), so enter them again on a new device.
 
 ### Q. The app is always light / always dark
