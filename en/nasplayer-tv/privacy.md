@@ -12,7 +12,7 @@ description: "What information NAS Player for Apple TV handles, where it is stor
 # Privacy Policy
 
 **Applies to**: NAS Player (tvOS · App Store name: Easy NAS Player TV)
-**Last updated**: 2026-10-29 **Version**: 1.0
+**Last updated**: 2026-10-30 **Version**: 1.1
 
 ---
 
@@ -54,7 +54,13 @@ Values such as appearance, sort order, view mode, grid columns, playback engine,
 ### 3.3 Images and temporary files
 
 - Thumbnails and photos are kept **in memory only** while shown and disappear when the app is closed.
-- When you play a video from an SFTP server that has a subtitle file of the same name, the subtitle is read into the device's temporary folder so it can be attached to playback. This is a transient part of playback, not a user-facing download feature.
+- When a video is played with Built-in VLC or High quality (mpv) and has a subtitle file of the same name, the app detects its encoding and keeps a UTF-8 copy in the device's temporary folder to attach it to playback. This is a transient part of playback, not a user-facing download feature.
+
+### 3.4 Photos library (1.1)
+
+- When you open "Photos Library" or "Albums", tvOS asks once for photo access. If you allow it, the app only **reads** this Apple TV's photo library, albums and shared albums — it never deletes, edits or creates photos.
+- Photos and videos stored only in iCloud are fetched to the device from Apple's iCloud Photos service so they can be shown. tvOS handles this; nothing goes to the developer.
+- Photos are kept in memory only while shown; originals are not stored separately and are never sent to a NAS or any other server. Some videos may be exported briefly to a temporary folder for playback.
 - Original photos and videos are never stored on Apple TV.
 
 ## 4. What is written to iCloud — settings only
@@ -83,7 +89,7 @@ The app communicates only with **servers you enter in its server settings**: Syn
 - There is no in-app web browser, so the app does not visit arbitrary websites.
 - **No upload or download.** The only exchanges with your server are folder listings, reading photos, videos and subtitles for display and playback, and server-side file management you start yourself (new folder, rename, delete, move, compress, extract).
 - On first connection to an SFTP server the app shows the host-key fingerprint and connects only if you trust it; if the key later changes, the connection is refused.
-- There is no developer-operated server, and the app sends no network requests to the developer. Apple system services (iCloud Key-Value Store, App Store) are handled by tvOS.
+- There is no developer-operated server, and the app sends no network requests to the developer. Apple system services (iCloud Key-Value Store, iCloud Photos, App Store) are handled by tvOS.
 
 ## 7. Security
 
@@ -100,8 +106,9 @@ The app communicates only with **servers you enter in its server settings**: Syn
 | Permission | Purpose |
 |---|---|
 | Local Network (`NSLocalNetworkUsageDescription`) | To reach NAS, SMB and SFTP servers on private IP addresses (e.g. 192.168.x.x). tvOS asks once on first connection. |
+| Photos (`NSPhotoLibraryUsageDescription`, 1.1) | To view this Apple TV's photo library and albums on the TV and play slideshows (read-only). Asked the first time you open "Photos Library" or "Albums"; NAS features keep working if you decline. |
 
-No other permission is requested — no location, contacts, microphone, camera, photos or tracking (ATT).
+No other permission is requested — no location, contacts, microphone, camera or tracking (ATT).
 
 All bundled third-party libraries are open source:
 

@@ -23,7 +23,8 @@ files are never copied to Apple TV or sent to the NAS; the app shows and plays t
 
 - **Free · no ads · no in-app purchases**
 - Servers you can connect to: **Synology NAS** (DSM), **SMB shared folders** (Windows, macOS, NAS) and **SFTP servers**
-- Photos: full screen, previous/next with the remote, zoom, slideshow
+- Photos: full screen, previous/next with the remote, click menu (zoom in, zoom out, rotate), slideshow
+- Photos library (1.1): this Apple TV's photo library, albums and shared albums in the same screens and slideshow (read-only)
 - Videos: choice of playback engine, automatic resume, auto-play next file, subtitles (srt, smi, vtt) found automatically, subtitle style
 - Folder browsing: thumbnail or list view, sort order, column count. File management on the server (new folder, rename, delete, move; compress and extract on Synology)
 
