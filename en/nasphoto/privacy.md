@@ -12,7 +12,7 @@ description: "What information Easy NAS Photo Viewer handles, where it is stored
 # Privacy Policy
 
 **Applies to**: Easy NAS Photo Viewer (iOS)
-**Last updated**: 2026-10-21 **Version**: 1.2
+**Last updated**: 2026-10-30 **Version**: 1.3
 
 ---
 
@@ -190,13 +190,16 @@ In all three cases, traffic goes solely to your own server and crosses the inter
 
 | Permission | Info.plist key | What it is actually for |
 |---|---|---|
-| Photos (add only) | `NSPhotoLibraryAddUsageDescription` | Used only when saving a photo you are viewing into the iPhone Photos app. The app never requests read access to your photo library and does not include a read-permission key. |
+| Photos (add only) | `NSPhotoLibraryAddUsageDescription` | Used when saving the photo you are viewing in the viewer into the iPhone Photos app. |
+| Photos (read and write) | `NSPhotoLibraryUsageDescription` | Used when you open the Photos "Library" or "Albums" under "This iPhone" to view your photos and videos and upload the ones you choose to your NAS, and when you download NAS photos into an album you choose. iOS asks once the first time; if you allow only selected photos, only those are shown. The app never deletes or edits items in Photos. |
 | Local Network | `NSLocalNetworkUsageDescription` | Used to connect to a NAS, SMB, or SFTP server on a private IP address (e.g., 192.168.x.x). iOS prompts once the first time a local network address is contacted. |
 | App Tracking Transparency | `NSUserTrackingUsageDescription` | Common to all three apps, requested once after the ad-consent check. Allowing it enables personalized ads; otherwise, only non-personalized ads are requested (common §6.1). You can change this in iOS Settings > Privacy & Security > Tracking. |
 
 No other permissions—such as location, contacts, microphone, camera, health, or notifications—are requested.
 
-When you choose "Upload from Photo Library…" on a folder screen, the app opens the standard iOS photo picker (PHPicker). Because PHPicker runs as a separate system process, the app cannot browse your photo library and receives only the specific photos and videos you select, which requires no photo library read permission. Selected items are copied unmodified to a temporary local folder for upload to your NAS and deleted immediately afterward.
+**Photos library and albums (added 2026-10-28)**: photos and videos in the Photos app are read only on your device, and only the items you choose are uploaded, to **the NAS you configured**. For an upload the original (downloaded by iOS if it is only in iCloud) is written to a temporary local file, handed to the background upload and deleted when the transfer ends. No photo, album name, location or other Photos content is sent to the developer or any third party; thumbnails are kept only briefly in memory. Downloading NAS photos into an album adds new items to Photos (items in an album are also in your Library).
+
+When you choose "Upload from Photo Library…" on a folder screen, the app opens the standard iOS photo picker (PHPicker), which runs as a separate system screen and passes the app only the photos and videos you select. Selected items are copied unmodified to a temporary local folder for upload to your NAS and deleted immediately afterward.
 
 ### Third-party libraries
 
