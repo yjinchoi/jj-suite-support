@@ -12,7 +12,7 @@ description: "What information NAS Player for Apple TV handles, where it is stor
 # Privacy Policy
 
 **Applies to**: NAS Player (tvOS · App Store name: Easy NAS Player TV)
-**Last updated**: 2026-10-30 **Version**: 1.1
+**Last updated**: 2026-11-18 **Version**: 1.2
 
 ---
 
@@ -22,7 +22,7 @@ The developer does not collect any user data.
 
 There is no developer-operated server, and the app has no network connection to the developer. Your data moves only between your Apple TV and the servers (NAS or file servers) you set up yourself. The developer has no access to it.
 
-NAS Player is **free, with no ads and no in-app purchases.** It contains no advertising, analytics or crash-reporting SDK and does not track you.
+NAS Player is **free, with no ads.** From version 1.2, Settings › Support Development offers optional donations (consumable in-app purchases), but a donation unlocks nothing (§6.1). It contains no advertising, analytics or crash-reporting SDK and does not track you.
 It also has **no upload or download feature.** It reads photos and videos from your server to show and play them; it never downloads files to keep on Apple TV and never uploads data from Apple TV to a server.
 
 ## 2. Principles
@@ -90,6 +90,12 @@ The app communicates only with **servers you enter in its server settings**: Syn
 - **No upload or download.** The only exchanges with your server are folder listings, reading photos, videos and subtitles for display and playback, and server-side file management you start yourself (new folder, rename, delete, move, compress, extract).
 - On first connection to an SFTP server the app shows the host-key fingerprint and connects only if you trust it; if the key later changes, the connection is refused.
 - There is no developer-operated server, and the app sends no network requests to the developer. Apple system services (iCloud Key-Value Store, iCloud Photos, App Store) are handled by tvOS.
+
+### 6.1 In-app purchases (donations, 1.2) — Apple App Store
+
+- Every feature is free and there are no ads. In Settings › Support Development you can make one of three optional donations (Small Donation, Donation, Big Donation — consumable in-app purchases) to support development. A donation unlocks nothing; the screen simply says thank you.
+- All payments are processed by Apple through the App Store. Neither the app nor the developer receives your payment details, credit card number, Apple ID, or any other personal information about the buyer.
+- The app does not record donations anywhere — not on the device, in the Keychain, or in iCloud.
 
 ## 7. Security
 
